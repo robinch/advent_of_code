@@ -36,5 +36,17 @@ defmodule Aoc2019.Day2Test do
   end
 
   describe "part 2" do
+    # ind the input noun and verb that cause the program to
+    # produce the output 19690720. What is 100 * noun + verb?
+    int_codes =
+      File.read!("puzzle_inputs/day_2.txt")
+      |> String.split("\n", trim: true)
+      |> hd()
+      |> String.split(",", trim: true)
+      |> Enum.map(&String.to_integer/1)
+
+    {noun, verb} = Day2.part_2(int_codes, 19_690_720)
+
+    assert 100 * noun + verb == 9820
   end
 end
