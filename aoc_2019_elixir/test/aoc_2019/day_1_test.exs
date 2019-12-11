@@ -22,7 +22,7 @@ defmodule Aoc2019.Day1Test do
 
     test "solution" do
       masses =
-        File.read!("puzzle_inputs/day1_part1.txt")
+        File.read!("puzzle_inputs/day_1.txt")
         |> String.split("\n", trim: true)
         |> Enum.map(&String.to_integer/1)
 
@@ -44,9 +44,8 @@ defmodule Aoc2019.Day1Test do
     end
 
     test "solution" do
-      # inputs for part_2 are the same as for part_1
       masses =
-        File.read!("puzzle_inputs/day1_part1.txt")
+        File.read!("puzzle_inputs/day_1.txt")
         |> String.split("\n", trim: true)
         |> Enum.map(&String.to_integer/1)
 

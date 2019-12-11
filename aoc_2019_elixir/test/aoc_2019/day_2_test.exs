@@ -25,7 +25,7 @@ defmodule Aoc2019.Day2Test do
       # pos 1 with the value 12
       # pos 2 with the value 2
       [pos_0, _pos_1, _pos_2 | int_codes] =
-        File.read!("puzzle_inputs/day2_part1.txt")
+        File.read!("puzzle_inputs/day_2.txt")
         |> String.split("\n", trim: true)
         |> hd()
         |> String.split(",", trim: true)
