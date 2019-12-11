@@ -24,16 +24,17 @@ defmodule Aoc2019.Day2Test do
       # I need replace these values
       # pos 1 with the value 12
       # pos 2 with the value 2
-      [pos_0, _pos_1, _pos_2 | int_codes] =
+      int_codes =
         File.read!("puzzle_inputs/day_2.txt")
         |> String.split("\n", trim: true)
         |> hd()
         |> String.split(",", trim: true)
         |> Enum.map(&String.to_integer/1)
 
-      replaced_int_codes = [pos_0, 12, 2 | int_codes]
-
-      assert Day2.part_1(replaced_int_codes) |> hd() == 2_782_414
+      assert Day2.part_1(int_codes, 12, 2) |> hd() == 2_782_414
     end
+  end
+
+  describe "part 2" do
   end
 end

@@ -1,9 +1,21 @@
 defmodule Aoc2019.Day2 do
   @spec part_1([integer]) :: [integer]
   def part_1(int_codes) do
-    list_to_map(int_codes)
+    int_codes
+    |> list_to_map()
     |> run()
     |> map_to_list()
+  end
+
+  @spec part_1([integer], integer, integer) :: [integer]
+  def part_1(int_codes, noun, verb) do
+    int_codes
+    |> replace_noun_and_verb(noun, verb)
+    |> part_1()
+  end
+
+  defp replace_noun_and_verb([pos_0, _pos_1, _pos_2 | int_codes], noun, verb) do
+    [pos_0, noun, verb | int_codes]
   end
 
   defp run(int_code_map, index \\ 0) do
