@@ -1,6 +1,6 @@
 defmodule AOC2021.Day03 do
   def part_01(path) do
-    gamma = path |> read_input() |> gamma
+    gamma = path |> read_input() |> gamma()
 
     epsilon = Enum.map(gamma, &(1 - &1))
 
