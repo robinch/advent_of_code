@@ -32,7 +32,9 @@ func Part1() int {
 
 	y := 0
 	for scanner.Scan() {
-		numbers = parseInput(scanner.Text(), y, hasSymbol, numbers)
+		for _, newNumber := range parseInput(scanner.Text(), y, hasSymbol) {
+			numbers = append(numbers, newNumber)
+		}
 		y++
 	}
 
@@ -45,7 +47,8 @@ func Part1() int {
 	return sum
 }
 
-func parseInput(line string, y int, hasSymbol map[point]bool, numbers []number) []number {
+func parseInput(line string, y int, hasSymbol map[point]bool) []number {
+	numbers := []number{}
 	lineAsRunes := []rune(line)
 
 	i := 0
