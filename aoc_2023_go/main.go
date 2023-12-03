@@ -3,6 +3,7 @@ package main
 import (
 	"aoc_2023_go/day1"
 	"aoc_2023_go/day2"
+	"aoc_2023_go/day3"
 	"fmt"
 )
 
@@ -13,4 +14,5 @@ func main() {
 	fmt.Printf("Day 2, part 1: %d\n", day2.Part1())
 	fmt.Printf("Day 2, part 2: %d\n", day2.Part2())
 
+	fmt.Printf("Day 3, part 1: %d\n", day3.Part1())
 }
