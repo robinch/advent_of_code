@@ -16,7 +16,6 @@ func Part1() int {
 		panic(err)
 	}
 
-
 	defer file.Close()
 
 	scanner := bufio.NewScanner(file)
