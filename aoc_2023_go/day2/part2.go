@@ -25,7 +25,7 @@ func Part2() int {
 	for scanner.Scan() {
 		game := getGame2(scanner.Text())
 
-			sum += game.power
+		sum += game.power
 	}
 
 	return sum
@@ -48,4 +48,3 @@ func getGame2(line string) gamePart2 {
 
 	return gamePart2{gameNr, power}
 }
-

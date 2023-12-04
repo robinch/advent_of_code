@@ -55,7 +55,7 @@ func getGame(line string) game {
 	bluehRegex := `([0-9]+) blue`
 	blues := getMaxIntFromRegex(line, bluehRegex)
 
-	if (reds > MAX_RED_CUBES || greens > MAX_GREEN_CUBES || blues > MAX_BLUE_CUBES) {
+	if reds > MAX_RED_CUBES || greens > MAX_GREEN_CUBES || blues > MAX_BLUE_CUBES {
 		isPossible = false
 	}
 
@@ -78,9 +78,8 @@ func getMaxIntFromRegex(line string, regexPattern string) int {
 		intMatches = append(intMatches, n)
 	}
 
-	return maxVal(intMatches)	
+	return maxVal(intMatches)
 }
-
 
 func maxVal(list []int) int {
 	max := 0

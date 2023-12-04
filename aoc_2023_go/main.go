@@ -17,7 +17,7 @@ func main() {
 
 	fmt.Printf("Day 3, part 1: %d\n", day3.Part1())
 	fmt.Printf("Day 3, part 2: %d\n", day3.Part2())
-  
+
 	fmt.Printf("Day 4, part 1: %d\n", day4.Part1("inputs/day4.txt"))
 	fmt.Printf("Day 4, part 2: %d\n", day4.Part2("inputs/day4.txt"))
 }

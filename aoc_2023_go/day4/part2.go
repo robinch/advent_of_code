@@ -14,12 +14,9 @@ func Part2(filePath string) int {
 		panic(err)
 	}
 
-
 	defer file.Close()
 
-
 	scanner := bufio.NewScanner(file)
-
 
 	card := 1
 	for scanner.Scan() {
@@ -29,12 +26,11 @@ func Part2(filePath string) int {
 		scratchCards += copiesOfCard
 
 		for i := 0; i < wins; i++ {
-			cardCopiesWon[card + i + 1] += copiesOfCard
+			cardCopiesWon[card+i+1] += copiesOfCard
 		}
 
 		card++
 	}
-
 
 	return scratchCards
 }
