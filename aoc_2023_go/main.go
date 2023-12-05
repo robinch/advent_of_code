@@ -1,12 +1,12 @@
 package main
 
 import (
-	// "aoc_2023_go/day1"
-	// "aoc_2023_go/day2"
-	// "aoc_2023_go/day3"
-	// "aoc_2023_go/day4"
-	// "aoc_2023_go/day5"
-	// "fmt"
+// "aoc_2023_go/day1"
+// "aoc_2023_go/day2"
+// "aoc_2023_go/day3"
+// "aoc_2023_go/day4"
+// "aoc_2023_go/day5"
+// "fmt"
 )
 
 func main() {

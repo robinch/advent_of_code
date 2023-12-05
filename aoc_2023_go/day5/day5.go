@@ -16,7 +16,6 @@ type mapping struct {
 	rangeLength int
 }
 
-
 func Part1(filePath string) int {
 	minLocation := math.MaxInt32
 	seeds, mappings := parseInput(filePath)
@@ -37,12 +36,12 @@ func Part2(filePath string) int {
 	minLocation := math.MaxInt32
 	seeds, mappings := parseInput(filePath)
 
-	for i:= 0; i < len(seeds); i += 2 {
-		for seed := seeds[i]; seed < (seeds[i] + seeds[i + 1]); seed++ {
-		location := seedToLocation(seed, mappings)
-		if location < minLocation {
-			minLocation = location
-		}
+	for i := 0; i < len(seeds); i += 2 {
+		for seed := seeds[i]; seed < (seeds[i] + seeds[i+1]); seed++ {
+			location := seedToLocation(seed, mappings)
+			if location < minLocation {
+				minLocation = location
+			}
 		}
 	}
 
@@ -62,11 +61,11 @@ func seedToLocation(seed int, mappings [][]mapping) int {
 
 func getDestination(source int, mappings []mapping) int {
 	for _, m := range mappings {
-		if m.sourceStart <= source && source < m.sourceStart + m.rangeLength {
+		if m.sourceStart <= source && source < m.sourceStart+m.rangeLength {
 			diff := source - m.sourceStart
-			
+
 			return m.destStart + diff
-		}	
+		}
 	}
 
 	return source
@@ -83,10 +82,9 @@ func min(a []int) int {
 	return min
 }
 
-
 func parseInput(filePath string) ([]int, [][]mapping) {
-	seeds := []int {}
-	mappings := [][]mapping {}
+	seeds := []int{}
+	mappings := [][]mapping{}
 
 	file, err := os.Open(filePath)
 
