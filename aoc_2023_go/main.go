@@ -6,7 +6,7 @@ import (
 	// "aoc_2023_go/day3"
 	// "aoc_2023_go/day4"
 	// "aoc_2023_go/day5"
-	"aoc_2023_go/day7"
+	"aoc_2023_go/day8"
 	"fmt"
 )
 
@@ -29,7 +29,10 @@ func main() {
 	//
 	// fmt.Printf("Day 6, part 1: %d\n", day6.Part1("inputs/day6.txt"))
 	// fmt.Printf("Day 6, part 2: %d\n", day6.Part2("inputs/day6.txt"))
+	//
+	// fmt.Printf("Day 7, part 2: %d\n", day7.Part2("inputs/day7.txt"))
+	// fmt.Printf("Day 7, part 1: %d\n", day7.Part1("inputs/day7.txt"))
 
-	fmt.Printf("Day 7, part 1: %d\n", day7.Part1("inputs/day7.txt"))
-	fmt.Printf("Day 7, part 2: %d\n", day7.Part2("inputs/day7.txt"))
+	fmt.Printf("Day 8, part 1: %d\n", day8.Part1("day8/input.txt"))
+	fmt.Printf("Day 8, part 2: %d\n", day8.Part2("day8/input.txt"))
 }
