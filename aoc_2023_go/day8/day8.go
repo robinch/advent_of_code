@@ -12,28 +12,28 @@ type Node struct {
 }
 
 func Part1(filePath string) int {
-	instructions, tree := getInputs(filePath)
+	instructions, network := getInputs(filePath)
 	goalFunction := func(name string)bool {return name == "ZZZ"}
 
-	return stepsToGoal("AAA", goalFunction, instructions, tree)
+	return stepsToGoal("AAA", goalFunction, instructions, network)
 }
 
 func Part2(filePath string) int {
 	// Seems like all paths loops after finding the first goal
 	// Can use LCD on all steps for each path
-	instructions, tree := getInputs(filePath)
-	names := startingNames(tree)
+	instructions, network := getInputs(filePath)
+	names := startingNames(network)
 	goalFunction := func(name string)bool {return endsWith(name, 'Z')}
 
 	steps := []int {}
 	for _, name := range names {
-		steps = append(steps, stepsToGoal(name, goalFunction, instructions, tree))
+		steps = append(steps, stepsToGoal(name, goalFunction, instructions, network))
 	}
 
 	return lcd(steps)
 }
 
-func stepsToGoal(start string, goalFunction func(name string)bool, instructions []byte, tree map[string]Node) int {
+func stepsToGoal(start string, goalFunction func(name string)bool, instructions []byte, network map[string]Node) int {
 	i := 0
 	steps := 0
 	name := start
@@ -45,9 +45,9 @@ func stepsToGoal(start string, goalFunction func(name string)bool, instructions 
 		}
 
 		if instructions[i] == 'L' {
-			name = tree[name].left
+			name = network[name].left
 		} else {
-			name = tree[name].right
+			name = network[name].right
 		}
 
 		steps++
@@ -57,9 +57,9 @@ func stepsToGoal(start string, goalFunction func(name string)bool, instructions 
 	return steps
 }
 
-func startingNames(tree map[string]Node) []string {
+func startingNames(network map[string]Node) []string {
 	startingNames := []string{}
-	for key := range tree {
+	for key := range network {
 		if endsWith(key, 'A') {
 			startingNames = append(startingNames, key)
 		}
@@ -88,16 +88,16 @@ func getInputs(filePath string) ([]byte, map[string]Node) {
 	scanner.Scan()
 	instructions := []byte(scanner.Text())
 
-	tree := map[string]Node{}
+	network := map[string]Node{}
 
 	scanner.Scan()
 
 	for scanner.Scan() {
 		name, node := getNameAndNode(scanner.Text())
-		tree[name] = node
+		network[name] = node
 	}
 
-	return instructions, tree
+	return instructions, network
 }
 
 func getNameAndNode(line string) (string, Node) {
