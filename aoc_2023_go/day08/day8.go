@@ -1,4 +1,4 @@
-package day8
+package day08
 
 import (
 	"bufio"
@@ -13,7 +13,7 @@ type Node struct {
 
 func Part1(filePath string) int {
 	instructions, network := getInputs(filePath)
-	goalFunction := func(name string)bool {return name == "ZZZ"}
+	goalFunction := func(name string) bool { return name == "ZZZ" }
 
 	return stepsToGoal("AAA", goalFunction, instructions, network)
 }
@@ -23,9 +23,9 @@ func Part2(filePath string) int {
 	// Can use LCD on all steps for each path
 	instructions, network := getInputs(filePath)
 	names := startingNames(network)
-	goalFunction := func(name string)bool {return endsWith(name, 'Z')}
+	goalFunction := func(name string) bool { return endsWith(name, 'Z') }
 
-	steps := []int {}
+	steps := []int{}
 	for _, name := range names {
 		steps = append(steps, stepsToGoal(name, goalFunction, instructions, network))
 	}
@@ -33,7 +33,7 @@ func Part2(filePath string) int {
 	return lcd(steps)
 }
 
-func stepsToGoal(start string, goalFunction func(name string)bool, instructions []byte, network map[string]Node) int {
+func stepsToGoal(start string, goalFunction func(name string) bool, instructions []byte, network map[string]Node) int {
 	i := 0
 	steps := 0
 	name := start

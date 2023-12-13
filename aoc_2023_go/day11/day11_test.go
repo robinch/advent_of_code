@@ -2,7 +2,6 @@ package day11
 
 import "testing"
 
-
 func TestPart1(t *testing.T) {
 	got := Part1("test_input.txt")
 	want := 374

@@ -1,4 +1,4 @@
-package day8
+package day08
 
 import "testing"
 
@@ -11,7 +11,6 @@ func TestPart1(t *testing.T) {
 	}
 }
 
-
 func TestPart2(t *testing.T) {
 	got := Part2("./test_input_2.txt")
 	want := 6
@@ -20,4 +19,3 @@ func TestPart2(t *testing.T) {
 		t.Errorf("got %d, want %d", got, want)
 	}
 }
-
