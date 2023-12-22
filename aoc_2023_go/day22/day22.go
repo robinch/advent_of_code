@@ -25,6 +25,23 @@ func (b *brick) String() string {
 	return fmt.Sprintf("%v%s%v", b.start, b.label, b.end)
 }
 
+func (b *brick) addBelow(brick *brick) {
+	b.below = append(b.below, brick)
+}
+
+func (b *brick) containsBelow(brick *brick) bool{
+	return contains(b.below, brick)
+}
+
+func (b *brick) addAbove(brick *brick) {
+	b.above = append(b.above, brick)
+}
+
+func (b *brick) containsAbove(brick *brick) bool{
+	return contains(b.above, brick)
+}
+
+
 func Part1(filePath string) int {
 	bricks := readInput(filePath)
 	sort.Slice(bricks, func(i, j int) bool {
@@ -32,24 +49,26 @@ func Part1(filePath string) int {
 	})
 
 	posToBrick := createPosToBrickMap(bricks)
-
-	fmt.Println("Bricks:")
-	for _, b := range bricks {
-		fmt.Printf("%s %v-%v\n", b.label, b.start, b.end)
-	}
-
-
-	// fmt.Printf("Pos toBricks\n brick: %v\n", posToBrick)
-
-	// above(bricks, posToBrick)
-
 	pushDown(bricks, posToBrick)
-	fmt.Println("After push down:")
+	populateAbove(bricks)
+
+	bricksToDisintegrate := []brick{}
+
 	for _, b := range bricks {
-		fmt.Printf("%s %v-%v: %v\n", b.label, b.start, b.end, b.above)
+		disintegrate := true
+		for _, above := range b.above {
+			if len(above.below) == 1 {
+				disintegrate = false
+				break
+			}
+		}
+
+		if disintegrate {
+			bricksToDisintegrate = append(bricksToDisintegrate, b)
+		}
 	}
 
-	return 0
+	return len(bricksToDisintegrate)
 }
 
 func createPosToBrickMap(bricks []brick) posToBrickMap {
@@ -100,9 +119,8 @@ func pushDown(bricks []brick, posToBrickMap posToBrickMap) {
 
 			for _, p := range positions {
 				if below, ok := posToBrickMap[pos{p.x, p.y, z-1}]; ok {
-					fmt.Printf("%s found %s below\n", b.label, below.label)
-					if !contains(b.below, below) {
-						b.below = append(b.below, below)
+					if !b.containsBelow(below) {
+						b.addBelow(below)
 					}
 					updateBrickZ(b, posToBrickMap, z)
 
@@ -124,37 +142,17 @@ func updateBrickZ(b *brick, posToBrickMap posToBrickMap, newZ int) {
 		b.end.z = newZ
 }
 
-// func above(bricks []brick, posToBrickMap posToBrickMap) {
-// 	maxHeight := bricks[len(bricks)-1].end.z
-// 	for _, b := range bricks {
-// 		xStart, xEnd := order(b.start.x, b.end.x)
-// 		yStart, yEnd := order(b.start.y, b.end.y)
-// 		zStart, _ := order(b.start.z, b.end.z)
-//
-// 		zStart++
-//
-// 		found := false
-//
-// 		for z := zStart; z <= maxHeight; z++ {
-// 			if found {
-// 				break
-// 			}
-//
-// 			for x := xStart; x <= xEnd; x++ {
-// 				for y := yStart; y <= yEnd; y++ {
-// 					if above, ok := posToBrickMap[pos{x, y, z}]; ok {
-// 						fmt.Printf("%s above %s\n", above.label, b.label)
-// 						if !contains(b.above, above) {
-// 							b.above = append(b.above, above)
-// 						}
-// 						found = true
-// 					}
-// 				}
-// 			}
-// 		}
-// 	}
-//
-// }
+
+func populateAbove(bricks []brick) {
+	for i := range bricks {
+		b := &bricks[i]
+
+		for i := range b.below {
+			below := b.below[i]
+			below.addAbove(b)
+		}
+	}
+}
 
 func contains(bricks []*brick, b *brick) bool {
 	for _, brick := range bricks {
