@@ -108,12 +108,12 @@ func pushDown(bricks []brick, posToBrickMap posToBrickMap) {
 
 		zStart, _ := order(b.start.z, b.end.z)
 
-		stop := false
+		collision := false
 
 		positions := getBrickPositions(*b)
 
 		for z := zStart; z > 0; z-- {
-			if stop {
+			if collision {
 				break
 			}
 
@@ -124,7 +124,7 @@ func pushDown(bricks []brick, posToBrickMap posToBrickMap) {
 					}
 					updateBrickZ(b, posToBrickMap, z)
 
-					stop = true
+					collision = true
 				}
 			}
 		}
