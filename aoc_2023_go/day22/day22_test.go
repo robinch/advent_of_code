@@ -12,7 +12,7 @@ func TestPart1(t *testing.T) {
 }
 
 func TestGetBrickPositions(t *testing.T) {
-	brick := brick{pos{0, 0, 1}, pos{2, 0, 1}, "", nil, nil}
+	brick := brick{pos{0, 0, 1}, pos{2, 0, 1}, nil, nil}
 	got := getBrickPositions(brick)
 	want := []pos{{0, 0, 1}, {1, 0, 1}, {2, 0, 1}}
 

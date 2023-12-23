@@ -15,14 +15,13 @@ type pos struct {
 
 type brick struct {
 	start, end   pos
-	label        string
 	above, below []*brick
 }
 
 type posToBrickMap map[pos]*brick
 
 func (b *brick) String() string {
-	return fmt.Sprintf("%v%s%v", b.start, b.label, b.end)
+	return fmt.Sprintf("%v-%v", b.start, b.end)
 }
 
 func (b *brick) addBelow(brick *brick) {
@@ -45,12 +44,11 @@ func (b *brick) containsAbove(brick *brick) bool{
 func Part1(filePath string) int {
 	bricks := readInput(filePath)
 	sort.Slice(bricks, func(i, j int) bool {
-		return less(bricks[i].start, bricks[j].start)
+		return bricks[i].start.z < bricks[j].start.z
 	})
 
 	posToBrick := createPosToBrickMap(bricks)
 	pushDown(bricks, posToBrick)
-	populateAbove(bricks)
 
 	bricksToDisintegrate := []brick{}
 
@@ -121,6 +119,7 @@ func pushDown(bricks []brick, posToBrickMap posToBrickMap) {
 				if below, ok := posToBrickMap[pos{p.x, p.y, z-1}]; ok {
 					if !b.containsBelow(below) {
 						b.addBelow(below)
+						below.addAbove(b)
 					}
 					updateBrickZ(b, posToBrickMap, z)
 
@@ -140,18 +139,6 @@ func updateBrickZ(b *brick, posToBrickMap posToBrickMap, newZ int) {
 		
 		b.start.z = newZ
 		b.end.z = newZ
-}
-
-
-func populateAbove(bricks []brick) {
-	for i := range bricks {
-		b := &bricks[i]
-
-		for i := range b.below {
-			below := b.below[i]
-			below.addAbove(b)
-		}
-	}
 }
 
 func contains(bricks []*brick, b *brick) bool {
@@ -196,12 +183,10 @@ func readInput(filePath string) []brick {
 
 		var b brick
 
-		label := fmt.Sprintf("%c", 'A'+n)
-
-		if less(posA, posB) {
-			b = brick{posA, posB, label, []*brick{}, []*brick{}}
+		if posA.z < posB.z {
+			b = brick{posA, posB, []*brick{}, []*brick{}}
 		} else {
-			b = brick{posB, posA, label, []*brick{}, []*brick{}}
+			b = brick{posB, posA, []*brick{}, []*brick{}}
 		}
 
 		bricks = append(bricks, b)
@@ -211,21 +196,6 @@ func readInput(filePath string) []brick {
 	return bricks
 }
 
-func less(a, b pos) bool {
-	if a.z < b.z {
-		return true
-	} else if a.z > b.z {
-		return false
-	} else if a.y < b.y {
-		return true
-	} else if a.y > b.y {
-		return false
-	} else if a.x < b.x {
-		return true
-	} else {
-		return false
-	}
-}
 
 func toInt(s string) int {
 	i, err := strconv.Atoi(s)
