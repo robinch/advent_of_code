@@ -4,6 +4,7 @@ use std::fs;
 
 fn main() {
     part01();
+    part02();
 }
 
 fn part01() {
@@ -23,6 +24,24 @@ fn part01() {
     println!("Day 5, part 1: : {}", sum_of_middle_pages);
 }
 
+fn part02() {
+    let (is_before_map, updates) = parse_input("input/input");
+
+    let sum_of_middle_pages: i32 = updates
+        .into_iter()
+        .filter(|update| !valid_order(&update, &is_before_map))
+        .map(|mut update| {
+            if !valid_order(&update, &is_before_map) {
+                update.sort_by(|a, b| cmp_valid_order(a, b, &is_before_map))
+            }
+
+            update[update.len() / 2]
+        })
+        .sum();
+
+    println!("Day 5, part 2: : {}", sum_of_middle_pages);
+}
+
 fn valid_order(update: &Vec<i32>, is_before_map: &HashMap<i32, Vec<i32>>) -> bool {
     let mut has_encountered: HashSet<&i32> = HashSet::new();
 
@@ -39,6 +58,20 @@ fn valid_order(update: &Vec<i32>, is_before_map: &HashMap<i32, Vec<i32>>) -> boo
     }
 
     true
+}
+
+fn cmp_valid_order(a: &i32, b: &i32, is_before_map: &HashMap<i32, Vec<i32>>) -> std::cmp::Ordering {
+    if a == b {
+        return std::cmp::Ordering::Equal;
+    }
+
+    if let Some(before) = is_before_map.get(&a) {
+        if before.contains(&b) {
+            return std::cmp::Ordering::Less;
+        }
+    }
+
+    std::cmp::Ordering::Greater
 }
 
 fn parse_input(path: &str) -> (HashMap<i32, Vec<i32>>, Vec<Vec<i32>>) {
