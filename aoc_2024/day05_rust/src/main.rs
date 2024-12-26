@@ -10,14 +10,9 @@ fn main() {
 fn part01() {
     let (is_before_map, updates) = parse_input("input/input");
 
-    let valid_updates: Vec<Vec<i32>> = updates
+    let sum_of_middle_pages: i32 = updates
         .iter()
         .filter(|update| valid_order(&update, &is_before_map))
-        .cloned()
-        .collect();
-
-    let sum_of_middle_pages: i32 = valid_updates
-        .iter()
         .map(|update| update[update.len() / 2])
         .sum();
 
