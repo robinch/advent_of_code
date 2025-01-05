@@ -1,11 +1,7 @@
 use std::collections::HashSet;
 use std::fs;
 
-fn main() {
-    part1();
-}
-
-#[derive(Debug)]
+#[derive(Clone, Debug, Eq, Hash, PartialEq)]
 enum Direction {
     Up,
     Down,
@@ -27,7 +23,7 @@ impl Map {
     }
 }
 
-#[derive(Debug)]
+#[derive(Clone, Debug, Eq, Hash, PartialEq)]
 struct Guard {
     pos: (i32, i32),
     direction: Direction,
@@ -58,16 +54,77 @@ impl Guard {
 }
 
 fn part1() {
-    let mut visited: HashSet<(i32, i32)> = HashSet::new();
     let map = parse_input("input/input");
 
-    let mut guard = Guard {
+    let guard = Guard {
         pos: map.starting_pos,
         direction: Direction::Up,
     };
 
+    let unique_positions = get_all_unique_guard_positions(&guard, &map);
+
+    println!("Day 6, part 1: {}", unique_positions.len());
+}
+
+fn part2() {
+    let map = parse_input("input/input");
+
+    let guard = Guard {
+        pos: map.starting_pos,
+        direction: Direction::Up,
+    };
+
+    let mut positions = get_all_unique_guard_positions(&guard, &map);
+    positions.remove(&guard.pos);
+
+    let mut count = 0;
+
+    for extra_obstacle in positions {
+        if has_loop(&extra_obstacle, &guard, &map) {
+            count += 1;
+        }
+    }
+
+    println!("Day 6, part 2: {}", count);
+}
+
+fn has_loop(extra_obstacle: &(i32, i32), current_guard: &Guard, map: &Map) -> bool {
+    let mut visited: HashSet<Guard> = HashSet::new();
+
+    let mut obstacles = map.obstacles.clone();
+    obstacles.insert(*extra_obstacle);
+
+    let mut guard = current_guard.clone();
+
     loop {
-        visited.insert(guard.pos);
+        let inserted = visited.insert(guard.clone());
+
+        if !inserted {
+            return true;
+        }
+
+        let next_pos = guard.forward_pos();
+
+        if map.out_of_bounds(&next_pos) {
+            break;
+        } else if obstacles.contains(&next_pos) {
+            guard.turn();
+        } else {
+            guard.move_forward();
+        }
+    }
+
+    false
+}
+
+fn get_all_unique_guard_positions(start_guard: &Guard, map: &Map) -> HashSet<(i32, i32)> {
+    let mut positions: Vec<Guard> = Vec::new();
+    let mut unique_positions: HashSet<(i32, i32)> = HashSet::new();
+
+    let mut guard = start_guard.clone();
+
+    loop {
+        positions.push(guard.clone());
 
         let next_pos = guard.forward_pos();
 
@@ -79,8 +136,11 @@ fn part1() {
             guard.move_forward();
         }
     }
+    for p in positions {
+        unique_positions.insert(p.pos);
+    }
 
-    println!("Day 6, part 1: {}", visited.len());
+    unique_positions
 }
 
 // The origo is at the top left corner, (row, col)
@@ -112,4 +172,9 @@ fn parse_input(path: &str) -> Map {
         height,
         width,
     }
+}
+
+fn main() {
+    part1();
+    part2();
 }
