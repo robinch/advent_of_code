@@ -3,6 +3,7 @@ use std::fs;
 fn main() {
     let input = read_input("input/real.txt");
     println!("Part 1: {}", part1(&input));
+    println!("Part 2: {}", part2(&input));
 }
 
 fn part1(input: &Vec<(String, i32)>) -> i32 {
@@ -22,6 +23,35 @@ fn part1(input: &Vec<(String, i32)>) -> i32 {
     }
 
     on_zero
+}
+
+fn part2(input: &Vec<(String, i32)>) -> i32 {
+    let mut passed_zero = 0;
+    let mut dial = 50;
+
+    for (direction, steps) in input {
+        let new_dial: i32;
+        if direction == "R" {
+            new_dial = dial + steps;
+            if new_dial > 99 {
+                passed_zero += new_dial / 100
+            }
+        } else {
+            new_dial = dial - steps;
+
+            if new_dial <= 0 {
+                passed_zero += new_dial / -100;
+
+                if dial != 0 {
+                    passed_zero += 1;
+                }
+            }
+        }
+
+        dial = (new_dial).rem_euclid(100);
+    }
+
+    passed_zero
 }
 
 fn read_input(file_path: &str) -> Vec<(String, i32)> {
@@ -49,5 +79,12 @@ mod tests {
         let input = read_input("input/example.txt");
         let result = part1(&input);
         assert_eq!(result, 3);
+    }
+
+    #[test]
+    fn part2_test() {
+        let input = read_input("input/example.txt");
+        let result = part2(&input);
+        assert_eq!(result, 6);
     }
 }
