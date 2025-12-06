@@ -4,31 +4,55 @@ fn main() {
     let input = read_input("input/real.txt");
     let part1 = part1(&input);
     println!("Day03 part 1: {}", part1);
+
+    let part2 = part2(&input);
+    println!("Day03 part 2: {}", part2);
 }
 
-fn part1(batteries: &Vec<Vec<u8>>) -> u32 {
-    batteries
+fn part1(banks: &Vec<Vec<u8>>) -> u32 {
+    banks
         .iter()
-        .map(|battery| max_joltage(battery) as u32)
+        .map(|battery_bank| {
+            let (max_left_index, max_left) =
+                max_val_and_index(&battery_bank, 0, battery_bank.len() - 1);
+            let (_, max_right) =
+                max_val_and_index(&battery_bank, max_left_index + 1, battery_bank.len());
+
+            (10 * max_left + max_right) as u32
+        })
         .sum()
 }
 
-fn max_joltage(battery: &Vec<u8>) -> u8 {
-    let mut left_max_pos: usize = 0;
-    let mut left_max: u8 = 0;
-    for i in 0..battery.len() - 1 {
+fn part2(banks: &Vec<Vec<u8>>) -> u64 {
+    banks
+        .iter()
+        .map(|battery_bank| {
+            let mut sum: u64 = 0;
+            let mut max_index: isize = -1;
+            let len = battery_bank.len();
+            for i in (0..=11).rev() {
+                let (index, max) =
+                    max_val_and_index(&battery_bank, (max_index + 1) as usize, len - i);
+                sum += (max as u64) * u64::pow(10, i as u32);
+                max_index = index as isize;
+            }
+            sum
+        })
+        .sum()
+}
+
+fn max_val_and_index(battery: &Vec<u8>, from: usize, to: usize) -> (usize, u8) {
+    let mut max_pos: usize = 0;
+    let mut max: u8 = 0;
+    for i in from..to {
         let val = battery[i];
-        if val > left_max {
-            left_max = val;
-            left_max_pos = i;
+        if val > max {
+            max = val;
+            max_pos = i;
         }
     }
 
-    let right_max = battery[left_max_pos + 1..]
-        .iter()
-        .max()
-        .expect("Could not find right max");
-    10 * left_max + right_max
+    (max_pos, max)
 }
 
 fn read_input(file_path: &str) -> Vec<Vec<u8>> {
@@ -52,8 +76,14 @@ mod tests {
     #[test]
     fn part1_test() {
         let input = read_input("input/example.txt");
-        print!("input: {:?}", input);
         let result = part1(&input);
         assert_eq!(result, 357);
+    }
+
+    #[test]
+    fn part2_test() {
+        let input = read_input("input/example.txt");
+        let result = part2(&input);
+        assert_eq!(result, 3121910778619);
     }
 }
