@@ -82,14 +82,14 @@ mod tests {
     use super::*;
 
     #[test]
-    pub fn part1_test() {
+    fn part1_test() {
         let input = read_input("input/example.txt");
         let res = part1(&input);
         assert_eq!(res, 21);
     }
 
     #[test]
-    pub fn part2_test() {
+    fn part2_test() {
         let input = read_input("input/example.txt");
         let res = part2(&input);
         assert_eq!(res, 40);
