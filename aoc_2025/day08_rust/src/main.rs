@@ -24,49 +24,58 @@ fn main() {
     println!("Day08 part1: {}", part1);
 }
 
-fn part1(positions: &Vec<Pos>, pairs_to_check: usize) -> usize {
+fn part1(positions: &Vec<Pos>, pairs_to_check: usize) -> u32 {
     let sorted_pairs_by_dist = sorted_pairs_by_dist(positions);
     let circuits_to_multiply = 3;
 
     let mut circuits: Vec<HashSet<&Pos>> = vec![];
 
     for pair in sorted_pairs_by_dist.iter().take(pairs_to_check) {
-        let pos1_idx = circuits
-            .iter()
-            .position(|circuit| circuit.contains(pair.pos1));
-
-        let pos2_idx = circuits
-            .iter()
-            .position(|circuit| circuit.contains(pair.pos2));
-
-        match (pos1_idx, pos2_idx) {
-            (None, None) => {
-                let mut circuit = HashSet::new();
-                circuit.insert(pair.pos1);
-                circuit.insert(pair.pos2);
-
-                circuits.push(circuit);
-            }
-
-            (Some(i), None) => {
-                circuits[i].insert(pair.pos2);
-            }
-            (None, Some(i)) => {
-                circuits[i].insert(pair.pos1);
-            }
-            (Some(i), Some(j)) if i != j => {
-                let circuit = circuits.swap_remove(j);
-                circuits[i].extend(circuit);
-            }
-
-            _ => {}
-        }
+        add_pair_to_circuits(&mut circuits, pair);
     }
 
-    let mut circuit_sizes: Vec<_> = circuits.iter().map(|circuit| circuit.len()).collect();
+    let mut circuit_sizes: Vec<_> = circuits
+        .iter()
+        .map(|circuit| circuit.len() as u32)
+        .collect();
     circuit_sizes.sort_by_key(|size| Reverse(*size));
 
     circuit_sizes.iter().take(circuits_to_multiply).product()
+}
+
+fn add_pair_to_circuits<'a>(circuits: &mut Vec<HashSet<&'a Pos>>, pair: &Pair<'a>) {
+    let pos1_idx = circuits
+        .iter()
+        .position(|circuit| circuit.contains(pair.pos1));
+
+    let pos2_idx = circuits
+        .iter()
+        .position(|circuit| circuit.contains(pair.pos2));
+
+    match (pos1_idx, pos2_idx) {
+        (None, None) => {
+            let mut circuit = HashSet::new();
+            circuit.insert(pair.pos1);
+            circuit.insert(pair.pos2);
+
+            circuits.push(circuit);
+        }
+
+        (Some(i), None) => {
+            circuits[i].insert(pair.pos2);
+        }
+        (None, Some(i)) => {
+            circuits[i].insert(pair.pos1);
+        }
+        (Some(i), Some(j)) if i != j => {
+            let min_index = i.min(j);
+            let max_index = i.max(j);
+            let circuit = circuits.swap_remove(max_index);
+            circuits[min_index].extend(circuit);
+        }
+
+        _ => {}
+    }
 }
 
 fn sorted_pairs_by_dist(positions: &Vec<Pos>) -> Vec<Pair<'_>> {
