@@ -1,3 +1,4 @@
+use core::panic;
 use std::cmp::Reverse;
 use std::collections::HashSet;
 use std::fs;
@@ -22,6 +23,8 @@ fn main() {
     let positions = read_input("input/real.txt");
     let part1 = part1(&positions, 1000);
     println!("Day08 part1: {}", part1);
+    let part2 = part2(&positions);
+    println!("Day08 part2: {}", part2);
 }
 
 fn part1(positions: &Vec<Pos>, pairs_to_check: usize) -> u32 {
@@ -41,6 +44,32 @@ fn part1(positions: &Vec<Pos>, pairs_to_check: usize) -> u32 {
     circuit_sizes.sort_by_key(|size| Reverse(*size));
 
     circuit_sizes.iter().take(circuits_to_multiply).product()
+}
+
+fn part2(positions: &Vec<Pos>) -> i64 {
+    let mut unconnected: HashSet<&Pos> = positions.iter().collect();
+    let mut circuits: Vec<HashSet<&Pos>> = vec![];
+    let sorted_pairs_by_dist = sorted_pairs_by_dist(positions);
+
+    let mut last_pair: Option<&Pair> = None;
+
+    for pair in sorted_pairs_by_dist.iter() {
+        add_pair_to_circuits(&mut circuits, pair);
+        unconnected.remove(pair.pos1);
+        unconnected.remove(pair.pos2);
+
+        if unconnected.is_empty() && circuits.len() == 1 {
+            last_pair = Some(pair);
+            break;
+        }
+    }
+
+    match last_pair {
+        Some(pair) => (pair.pos1.x as i64 * pair.pos2.x as i64)
+            .try_into()
+            .unwrap(),
+        None => panic!("No last pair found"),
+    }
 }
 
 fn add_pair_to_circuits<'a>(circuits: &mut Vec<HashSet<&'a Pos>>, pair: &Pair<'a>) {
@@ -130,5 +159,12 @@ mod test {
         let input = read_input("input/example.txt");
         let res = part1(&input, 10);
         assert_eq!(res, 40);
+    }
+
+    #[test]
+    fn part2_test() {
+        let input = read_input("input/example.txt");
+        let res = part2(&input);
+        assert_eq!(res, 25272);
     }
 }
